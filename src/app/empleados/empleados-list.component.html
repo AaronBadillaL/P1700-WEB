@@ -1,0 +1,121 @@
+<div class="empleados-container">
+  <div class="main-content">
+    <!-- Header mejorado -->
+    <div class="header-card">
+      <div class="header-info">
+        <div class="user-section">
+          <div class="user-avatar">
+            <svg class="avatar-icon" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+          </div>
+          <div class="user-details">
+            <h1 class="page-title">Panel de Empleados</h1>
+            <p class="user-info">{{ session?.nombreCompleto }} ({{ session?.perfil }})</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button *ngIf="canRegistro()" (click)="openCreate()" class="create-button">
+          <svg class="create-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+          </svg>
+          Crear Empleado
+        </button>
+        
+        <button (click)="logout()" class="logout-button">
+          <svg class="logout-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+          </svg>
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
+
+    <!-- Banner de mensajes -->
+    <div *ngIf="banner" class="banner" [class.success]="banner.type === 'success'" [class.error]="banner.type === 'error'">
+      <svg *ngIf="banner.type === 'success'" class="banner-icon" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+      </svg>
+      <svg *ngIf="banner.type === 'error'" class="banner-icon" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+      </svg>
+      {{ banner.text }}
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-card">
+      <div class="loading-spinner"></div>
+      <p>Cargando empleados...</p>
+    </div>
+
+    <!-- Tabla de empleados -->
+    <div *ngIf="!loading && canConsulta()" class="table-card">
+      <div class="table-header">
+        <h2 class="table-title">Lista de Empleados</h2>
+        <p class="table-subtitle">{{ empleados.length }} empleado(s) encontrado(s)</p>
+      </div>
+
+      <div class="table-container">
+        <table class="empleados-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Cédula</th>
+              <th>Perfil</th>
+              <th>Teléfono</th>
+              <th>Última asignación</th>
+              <th *ngIf="canRegistro()" class="actions-header">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let e of empleados" class="table-row">
+              <td class="name-cell">{{ e.nombreCompleto }}</td>
+              <td class="cedula-cell">{{ e.cedula }}</td>
+              <td class="perfil-cell">
+                <span class="perfil-badge">{{ e.perfil }}</span>
+              </td>
+              <td class="phone-cell">{{ e.telefono || '-' }}</td>
+              <td class="assignment-cell">
+                <div *ngIf="e.fechaUltimaAsignacion; else noAsig" class="assignment-info">
+                  <span class="assignment-date">{{ e.fechaUltimaAsignacion }}</span>
+                  <span class="assignment-details">{{ e.tiendaUltima }} · {{ e.supervisorUltimo }}</span>
+                </div>
+                <ng-template #noAsig>
+                  <span class="no-assignment">Sin asignaciones</span>
+                </ng-template>
+              </td>
+              <td *ngIf="canRegistro()" class="actions-cell">
+                <button (click)="openEdit(e)" class="edit-button">
+                  <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                  </svg>
+                  Editar
+                </button>
+                <button (click)="delete(e)" class="delete-button">
+                  <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Modal de empleado -->
+    <app-empleado-modal
+      *ngIf="showModal"
+      [mode]="modalMode"
+      [empleadoId]="editEmpleadoId"
+      [initial]="editInitial"
+      (close)="showModal=false"
+      (saveCreate)="onCreate($event)"
+      (saveEdit)="onEdit($event)">
+    </app-empleado-modal>
+  </div>
+</div>
+  

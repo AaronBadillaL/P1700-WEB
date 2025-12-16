@@ -1,0 +1,80 @@
+<div class="modal-overlay" (click)="close.emit()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">Crear Usuario</h2>
+      <p class="modal-subtitle">Completa los datos del nuevo usuario</p>
+    </div>
+
+    <form class="modal-form">
+      <div class="form-group">
+        <label class="form-label">Cédula</label>
+        <input 
+          [(ngModel)]="cedula" 
+          name="cedula"
+          type="text"
+          class="form-input"
+          placeholder="Ingresa la cédula"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nombre Completo</label>
+        <input 
+          [(ngModel)]="nombreCompleto" 
+          name="nombre"
+          type="text"
+          class="form-input"
+          placeholder="Ingresa el nombre completo"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <input 
+          [(ngModel)]="password" 
+          name="password"
+          type="password"
+          class="form-input"
+          placeholder="Ingresa la contraseña"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Perfil</label>
+        <select [(ngModel)]="perfilId" name="perfil" class="form-select">
+          <option [ngValue]="null">Selecciona un perfil</option>
+          <option *ngFor="let p of perfiles" [ngValue]="p.perfilId">
+            {{ p.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Tienda</label>
+        <select [(ngModel)]="tiendaId" name="tienda" class="form-select">
+          <option [ngValue]="null">Selecciona una tienda</option>
+          <option *ngFor="let t of tiendas" [ngValue]="t.tiendaId">
+            {{ t.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div *ngIf="error" class="error-message">{{ error }}</div>
+
+      <div class="form-actions">
+        <button type="button" (click)="close.emit()" class="cancel-button">
+          Cancelar
+        </button>
+        <button 
+          type="button" 
+          (click)="registrar()" 
+          class="register-button"
+          [disabled]="loading || !cedula || !nombreCompleto || !password || !perfilId || !tiendaId"
+        >
+          {{ loading ? 'Creando...' : 'Crear Usuario' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+  

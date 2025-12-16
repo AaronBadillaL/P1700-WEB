@@ -1,0 +1,95 @@
+<div class="modal-overlay" (click)="close.emit()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">{{ mode === 'create' ? 'Crear Empleado' : 'Editar Empleado' }}</h2>
+      <p class="modal-subtitle">{{ mode === 'create' ? 'Ingresa los datos del nuevo empleado' : 'Actualiza la información del empleado' }}</p>
+    </div>
+
+    <form class="modal-form">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Cédula</label>
+          <input 
+            [(ngModel)]="cedula" 
+            name="cedula"
+            type="text"
+            class="form-input"
+            placeholder="Ej: 101234567"
+            [disabled]="mode === 'edit'"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Nombre Completo</label>
+          <input 
+            [(ngModel)]="nombreCompleto" 
+            name="nombre"
+            type="text"
+            class="form-input"
+            placeholder="Ej: Juan Pérez González"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Teléfono</label>
+          <input 
+            [(ngModel)]="telefono" 
+            name="telefono"
+            type="text"
+            class="form-input"
+            placeholder="Ej: 8888-0000"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Tipo de Empleado</label>
+          <input 
+            [(ngModel)]="tipoEmpleado" 
+            name="tipo"
+            type="text"
+            class="form-input"
+            placeholder="Ej: Operativo, Supervisor"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Salario</label>
+          <input 
+            [(ngModel)]="salario" 
+            name="salario"
+            type="number"
+            class="form-input"
+            placeholder="Ej: 900000"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Perfil</label>
+          <select [(ngModel)]="perfilId" name="perfil" class="form-select">
+            <option [ngValue]="null">Selecciona un perfil</option>
+            <option *ngFor="let p of perfiles" [ngValue]="p.perfilId">
+              {{ p.nombre }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div *ngIf="error" class="error-message">{{ error }}</div>
+
+      <div class="form-actions">
+        <button type="button" (click)="close.emit()" class="cancel-button">
+          Cancelar
+        </button>
+        <button 
+          type="button" 
+          (click)="submit()" 
+          class="save-button"
+          [disabled]="!nombreCompleto || !perfilId"
+        >
+          {{ mode === 'create' ? 'Crear Empleado' : 'Guardar Cambios' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+  
