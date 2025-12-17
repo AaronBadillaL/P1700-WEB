@@ -5,7 +5,7 @@
 
 Antes de ejecutar el proyecto, asegúrese de tener instalado:
 
-- **Node.js** (versión 18 o superior)  
+- **Node.js** version 22.13.1
   https://nodejs.org/
 
 - **Angular CLI**  
